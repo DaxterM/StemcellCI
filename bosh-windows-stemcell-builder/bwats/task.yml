@@ -1,0 +1,26 @@
+---
+platform: linux
+image_resource: {type: docker-image, source: {repository: pivotalgreenhouse/ci}}
+
+inputs:
+  - name: ci
+  - name: stemcell-builder
+  - name: bosh-windows-stemcell
+
+run:
+  path: ci/bosh-windows-stemcell-builder/bwats/run
+
+params:
+  IAAS:
+  ACCOUNT_JSON:
+  BOSH_CA_CERT:
+  BOSH_CLIENT:
+  BOSH_CLIENT_SECRET:
+  BOSH_IP:
+  BOSH_UUID:
+  STEMCELL_PATH:
+  STEMCELL_OS: windows2012R2
+  AZ: z1
+  VM_TYPE: large
+  VM_EXTENSIONS: ""
+  NETWORK: default

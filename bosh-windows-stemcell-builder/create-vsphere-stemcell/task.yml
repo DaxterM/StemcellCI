@@ -1,0 +1,35 @@
+---
+platform: windows
+
+inputs:
+  - name: ci
+  - name: version
+  - name: vmx-version
+  - name: stemcell-builder
+outputs:
+
+run:
+  path: powershell
+  args:
+  - "-ExecutionPolicy"
+  - "Bypass"
+  - "-File"
+  - ci/bosh-windows-stemcell-builder/create-vsphere-stemcell/run.ps1
+params:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  AWS_REGION: us-east-1
+
+  ADMINISTRATOR_PASSWORD: replace-me
+  OS_VERSION: windows2012R2
+
+  INPUT_BUCKET: "bosh-windows-stemcell-vmx"
+  OUTPUT_BUCKET: "bosh-windows-stemcells-pre-release-candidate"
+  VMX_CACHE_DIR: "C:\\vmx-data"
+
+  PRODUCT_KEY:
+  ORGANIZATION:
+  OWNER:
+
+  VERSION_DIR: ../version
+  VMX_VERSION_DIR: ../vmx-version

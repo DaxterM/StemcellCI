@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -ex
+
+export STEMCELL_PATH=$(readlink -f $STEMCELL_PATH)
+
+cd stemcell-builder
+bundle install --without test
+rake package:bwats
+rake run:bwats[$IAAS]

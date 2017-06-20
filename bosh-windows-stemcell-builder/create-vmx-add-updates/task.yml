@@ -1,0 +1,29 @@
+---
+platform: windows
+
+inputs:
+  - name: ci
+  - name: version
+  - name: stemcell-builder
+outputs:
+
+run:
+  path: powershell
+  args:
+  - "-ExecutionPolicy"
+  - "Bypass"
+  - "-File"
+  - ci/bosh-windows-stemcell-builder/create-vmx-add-updates/run.ps1
+
+params:
+  AWS_ACCESS_KEY_ID: 
+  AWS_SECRET_ACCESS_KEY:
+  AWS_REGION: us-east-1
+
+ ADMINISTRATOR_PASSWORD: replace-me
+
+  INPUT_BUCKET:
+  OUTPUT_BUCKET:
+  VMX_CACHE_DIR: "C:\\vmx-data"
+  VERSION_DIR: ../version
+
