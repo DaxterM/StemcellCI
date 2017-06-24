@@ -1,6 +1,6 @@
 # StemcellCI
 
-This repo contains concourse tasks, example bosh manifiests, and documentation to automate the vSphere bosh windows stemcell creation proccess for a Pivotal cloud foundry windows cell using a concourse pipeline.  
+This repo contains concourse tasks, example bosh manifiests, and documentation to automate the vSphere bosh windows stemcell creation process for a Pivotal cloud foundry windows cell using a concourse pipeline.  
 
 # What does the pipeline do?
 The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET,etc), harden the OS (Disable RDP, local security policy,etc), and upload a stemcell to an S3 bucket. The final job in the pipeline will run acceptance tests on the stemcell.
