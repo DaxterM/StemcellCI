@@ -15,7 +15,7 @@ The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET
 # High level steps
 1. Deploy Vsphere bosh director with cloud-config
 2. Bosh Deploy concourse 
-3. Bosh deploy minio 
+3. Bosh deploy minio and create buckets
 4. Manualy build Concourse Windows worker VM
 5. Manualy build initial VM template and place in S3 Bucket
 6. Create creds.yml file
