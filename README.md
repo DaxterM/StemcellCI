@@ -5,6 +5,7 @@ This repo contains concourse tasks, example bosh manifiests, and documentation t
 # What does the pipeline do?
 The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET,etc), harden the OS (Disable RDP, local security policy,etc), and upload a stemcell to an S3 bucket. The final job in the pipeline will run acceptance tests on the stemcell.
 
+![Pipeline](https://github.com/DaxterM/StemcellCI/blob/master/Examples/pipeline.png)
 # Requirements
 1. Bosh director on Vsphere. see https://github.com/cloudfoundry/bosh-deployment/ and https://github.com/DaxterM/StemcellCI/blob/master/Examples/bosh-create-env-commands.md
 2. Bosh deployed concourse that supports external workers see https://concourse.ci/clusters-with-bosh.html and https://github.com/DaxterM/StemcellCI/blob/master/Examples/concourse.yml
