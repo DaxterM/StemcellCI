@@ -42,4 +42,4 @@ After setting this you will need to make a few more changes
 3. Configure IP range approraitly for the env you are using
 4. Create a new disk type called xlarge for minio
 
-You can see examples of the above in the cloud-config-example.yml 
+You can see examples of the above in https://github.com/DaxterM/StemcellCI/blob/master/Examples/cloud-config-example.yml
