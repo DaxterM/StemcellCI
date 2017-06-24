@@ -1,0 +1,35 @@
+#GIT details
+git_private_key: |
+ -----BEGIN RSA PRIVATE KEY-----
+ 
+ -----END RSA PRIVATE KEY-----
+
+
+#S3 details
+s3_endpoint: http://x.x.x.x:9000
+s3_access_key: 
+s3_secret_key: 
+s3_windows_updates_bucket: vmx-with-windows-update
+s3_stemcell_pre_release_candidate_bucket: bosh-windows-stemcells-pre-release-candidate
+s3_stemcell_release_candidate_bucket: bosh-windows-stemcells-release-candidate
+
+
+
+#VM Details
+owner: Pivotal
+organization: cloud-foundry
+num_vcpus: 4
+admin_password: 
+
+#Bwats details
+
+VM_TYPE: large
+BOSH_CLIENT_SECRET: 
+BOSH_CLIENT: admin
+BOSH_TARGET: x.x.x.x
+BOSH_UUID: 
+BOSH_IP: x.x.x.x
+BOSH_CA_CERT:  |
+          -----BEGIN CERTIFICATE-----
+          
+          -----END CERTIFICATE-----

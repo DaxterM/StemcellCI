@@ -1,0 +1,66 @@
+azs:
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster: {}
+  name: z1
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster: {}
+  name: z2
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - Cluster: {}
+  name: z3
+compilation:
+  az: z1
+  network: default
+  reuse_compilation_vms: true
+  vm_type: default
+  workers: 5
+disk_types:
+- disk_size: 3000
+  name: default
+- disk_size: 50000
+  name: large
+- disk_size: 300000
+  name: xlarge
+networks:
+- name: default
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - z3
+    cloud_properties:
+      name: VM Network
+    dns:
+    - 10.193.55.2
+    gateway: 10.193.55.1
+    range: 10.193.55.0/24
+    reserved:
+    - 10.193.55.0-10.193.55.104
+    - 10.193.55.110
+    - 10.193.55.121-10.193.55.255
+    static:
+    - 10.193.55.119
+    - 10.193.55.120
+  type: manual
+vm_types:
+- cloud_properties:
+    cpu: 2
+    disk: 3240
+    ram: 1024
+  name: default
+- cloud_properties:
+    cpu: 2
+    disk: 30240
+    ram: 4096
+  name: large
+- cloud_properties:
+    cpu: 2
+    disk: 100240
+    ram: 4096
+  name: concourselinuxworker

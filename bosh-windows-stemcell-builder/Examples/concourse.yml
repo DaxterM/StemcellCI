@@ -1,0 +1,122 @@
+---
+name: concourse
+director_uuid: ReplaceMe
+
+releases:
+- name: concourse
+  version: latest
+- name: garden-runc
+  version: latest
+
+
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: latest
+
+instance_groups:
+- name: web
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: large
+
+  stemcell: trusty
+  azs: [z1]
+  networks: 
+   - name: default
+     static_ips: [10.193.55.119]
+  jobs:
+  - name: atc
+    release: concourse
+    properties:
+      # replace with your CI's externally reachable URL, e.g. https://ci.foo.com
+      external_url: http://10.193.55.119
+
+      # replace with username/password, or configure GitHub auth
+      basic_auth_username: admin
+      basic_auth_password: password
+      bind_port: 80
+      postgresql_database: &atc_db atc
+      
+  - name: tsa
+    release: concourse
+    properties:
+      host_key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEogIBAAKCAQEAwkjLPsuWsWsQ9aXSRJAbRBQKor7s8lIJr0zeZ0C0zsSl95x3
+        JqUbApJPmuq/U5YUUcXoYj6t8L9vyC/87dSm3NTWS08Q3SJjeqKyJyXF3WcwfYSG
+        Tld2kHsSn2b5JF/+HtA7vIHe0CzKFRPnqIGYUuOL+KiGvPCKHHtSbsQaB8fgC5uh
+        LuDMwT0j2dKVyfYO08XTVuoTFsk3c1QUPW1ZT2YjyMkA6hrN4eF2mjSTpbX+427w
+        bS9DuJizpyX582xh8OUF0AeCsxTVeJDfNGSKhqSE3TvQT0oqYCqiN1AzebpGepgV
+        /9qKXSONGP2ZYi4JJaV4oMFWs3nvg06w9vO1sQIDAQABAoIBABdYbeu+xP3OsrwB
+        z/FjK5OToO+LZ6d6iiVhZDwd/1v1L0hAqeSf5E37zMr9uD3QA+MLl+/uPjJ2nnT8
+        pzTg36gbfyCPgKRB1JhQ4n1nwY3oL2B1wzm4ssuLrmIvGnLvgfar6PGu3VpAd4vu
+        12BdKjOTmicoAQDFGqNvgilDMSmL+j5g20PsQ29cwW2p8cM+GE1FqUCFkhE2tKaG
+        byreREiJBH+x2ANk5h3J1xPz50Ws3c/VYQMhcSgLK6qiK0CeAmnpfrQDIcLpt8Tc
+        Xs4GB0iRFo4f/zps4vpxJTygkHvcgSgjiT3uoWMghlX4bfXEFIoj7jRbjc/oU7iz
+        haJybgECgYEA7jmF1MTC2037hSLDC1/WocAtp6akw8C8NgSag7DHcjlk/nN0n+6h
+        d0vFVzEiaQtmxzXMZKxEVUvIg13e+m6xvifO5SMjex4m6B+1x2yop2zy8ksfAnV3
+        ZGW9jp2SYvNQ3YMkKtmO4eGxTDh9V1yrs4K+fyJfRJnuelbzB0IyF6ECgYEA0Mfw
+        fa/96UU4CXUfW7HOsPDxMV8arEA2fXmtYliGEo41g9fezp+0+UQopIExROpW5/Iw
+        H3xPqgM3gh12RLPKw0F3XxL4lP1k8vPAaizOeL9f4EpRKbRe1kEHf+ykplkxj5Cs
+        Nb12Kwq+gILrFMvvrmiJA/Ot+KGNriik7MVdpBECgYAsGmApfOfqO+y1wDLF109g
+        ELkjEZntV7BAe+ezO7Yg8nk9FljgBwjDkjaNpt4M/nxfoxkdBjt8YxRTJbzTNk0X
+        vDz0dOXrtDBVxxEbQ4WRwXzU2I18Ig0hfCh0z707LnqpF89JU4+9R9BQISErXE+5
+        YxorZUyn4auh4JkLnfiyIQKBgCiFpfe/INkVxjqPsPZrHGLbYPTkMJkeHXVdGHnu
+        FJelYl2kmGoiNU3sHLdRG+70TMnYB98UkaG93hgy/7F18/TR0Alz9St1wxIknUP+
+        TlTBUCqIQhiGGaIcHQiHNa3TwfrLaaFElJrmCvOGdXoj2vFO+Mj7ktifApC68sfB
+        xtsBAoGAQN+GSNvWhWwqKuvicMicmsxubwy2LftCAvjEb7+8Sp4s3mNWaOnry89f
+        OMuFFXMVzYwTL57A+mj+CMUNCLIGul3gd0FVx6/1egiGuUoDyieoSUkfPHLy+qcH
+        MHxG6SgbFalZyYDnDj22/HaW7sRYvZnddESnlACN3r+Zu1rpXSQ=
+        -----END RSA PRIVATE KEY-----
+      host_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCSMs+y5axaxD1pdJEkBtEFAqivuzyUgmvTN5nQLTOxKX3nHcmpRsCkk+a6r9TlhRRxehiPq3wv2/IL/zt1Kbc1NZLTxDdImN6orInJcXdZzB9hIZOV3aQexKfZvkkX/4e0Du8gd7QLMoVE+eogZhS44v4qIa88Ioce1JuxBoHx+ALm6Eu4MzBPSPZ0pXJ9g7TxdNW6hMWyTdzVBQ9bVlPZiPIyQDqGs3h4XaaNJOltf7jbvBtL0O4mLOnJfnzbGHw5QXQB4KzFNV4kN80ZIqGpITdO9BPSipgKqI3UDN5ukZ6mBX/2opdI40Y/ZliLgklpXigwVazee+DTrD287Wx root@ubuntu"
+      authorized_keys: [ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQChDbLa/j/Pj5gNXgETyDP+vr7K3Y4d3PNAkriaXrJfJTZ5OzbQ1fxZX4zBQ6kiO93irUgUOCoiFkd6WbE/U4g5IPaTKykQ/EPeVThB9UyKqeqzlmo5rFd3Bbmofs4hf+HFsTHKwAJiSOIWJGU4bNTB6Id+RQDULg06OWIiabzKosocGXc1JrU5uXva4hvQRKz3jUx7wCUpzs5vShDtOy6Z6ckuXGUX/ZMFdcryzzVkqoXdUYJHMswzUhSB6nQ8RXS7FIZn9uxOr94c16i5DyTScWN/47x5iefZLfY20pWFHzVKxpsZ0z3ml0XhPwuOiAavjmVFpnr9FjnVyVJqbcQX root@ubuntu]
+
+- name: db
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: large
+  stemcell: trusty
+  # replace with a disk type from your BOSH Director's cloud config
+  persistent_disk_type: large
+  azs: [z1]
+  networks: [{name: default}]
+  jobs:
+  - name: postgresql
+    release: concourse
+    properties:
+      databases:
+      - name: *atc_db
+        # make up a role and password
+        role: admin
+        password: P@ssw0rd
+
+- name: worker
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: concourselinuxworker
+
+  stemcell: trusty
+  azs: [z1]
+  networks: [{name: default}]
+  jobs:
+  - name: groundcrew
+    release: concourse
+    properties: {}
+  - name: baggageclaim
+    release: concourse
+    properties: {}
+  - name: garden
+    release: garden-runc
+    properties:
+      garden:
+        listen_network: tcp
+        listen_address: 0.0.0.0:7777
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  serial: false
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000

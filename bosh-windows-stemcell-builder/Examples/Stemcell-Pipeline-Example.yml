@@ -1,0 +1,142 @@
+resources:
+- name: ci
+  type: git
+  source:
+    branch: master
+    uri: git@github.com:DaxterM/StemcellCI.git
+    private_key: {{git_private_key}}
+
+- name: stemcell-builder
+  type: git
+  source:
+    branch: master
+    uri: git@github.com:DaxterM/bosh-windows-stemcell-builder.git
+    private_key: {{git_private_key}}
+
+- name: vmx-with-windows-update-version
+  type: semver
+  source:
+    bucket: {{s3_windows_updates_bucket}}
+    endpoint: {{s3_endpoint}}
+    disable_ssl: true
+    key: vmx-with-windows-update-version
+    access_key_id: {{s3_access_key}}
+    secret_access_key: {{s3_secret_key}}
+
+- name: stemcells-pre-release-candidate-version
+  type: semver
+  source:
+    bucket: {{s3_stemcell_pre_release_candidate_bucket}}
+    endpoint: {{s3_endpoint}}
+    disable_ssl: true
+    key: stemcells-pre-release-candidate-version
+    access_key_id: {{s3_access_key}}
+    secret_access_key: {{s3_secret_key}}
+
+    
+- name: vsphere-stemcell-pre-release-candidate
+  type: s3
+  source:
+   bucket: {{s3_stemcell_pre_release_candidate_bucket}}
+   regexp: bosh-stemcell-(.*)-vsphere-esxi-windows2012R2-go_agent.tgz
+   endpoint: {{s3_endpoint}}
+   disable_ssl: true
+   access_key_id: {{s3_access_key}}
+   secret_access_key: {{s3_secret_key}}     
+ 
+- name: vsphere-stemcell-release-candidate
+  type: s3
+  source:
+    bucket: {{s3_stemcell_release_candidate_bucket}}
+    regexp: bosh-stemcell-(.*)-vsphere-esxi-windows2012R2-go_agent.tgz
+    disable_ssl: true
+    access_key_id: {{s3_access_key}}
+    secret_access_key: {{s3_secret_key}}
+    endpoint: {{s3_endpoint}}
+    
+jobs:
+- name: create-vsphere-add-updates
+  serial: true
+  plan:
+  - aggregate:
+    - get: ci
+    - get: stemcell-builder
+    - get: vmx-version
+      resource: vmx-with-windows-update-version
+  - task: add-updates
+    privileged: true
+    input_mapping: { version: vmx-version }
+    file: ci/bosh-windows-stemcell-builder/create-vmx-add-updates/task.yml
+    params:
+      ADMINISTRATOR_PASSWORD: {{admin_password}}
+      ENDPOINT: {{s3_endpoint}}
+      AWS_ACCESS_KEY_ID: {{s3_access_key}}
+      AWS_SECRET_ACCESS_KEY: {{s3_secret_key}}
+      AWS_REGION: us-east-1
+      INPUT_BUCKET: {{s3_windows_updates_bucket}}
+      OUTPUT_BUCKET: {{s3_windows_updates_bucket}}
+      PRODUCT_KEY:  D2N9P-3P6X9-2R39C-7RTCD-MDVJX
+      OWNER: {{owner}}
+      ORGANIZATION: {{organization}}
+      OS_VERSION: windows2012R2
+      NUM_VCPUS: {{num_vcpus}}
+  - put: vmx-with-windows-update-version
+    params: {bump: major}
+- name: create-vsphere-stemcell
+  serial: true
+  plan:
+  - aggregate:
+    - get: ci
+    - get: stemcell-builder
+    - get: version
+      resource: stemcells-pre-release-candidate-version
+    - get: vmx-version
+      resource: vmx-with-windows-update-version
+      passed: [create-vsphere-add-updates]
+      trigger: true
+  - task: create-stemcell
+    privileged: true
+    file: ci/bosh-windows-stemcell-builder/create-vsphere-stemcell/task.yml
+    params:
+      ADMINISTRATOR_PASSWORD: {{admin_password}}
+      ENDPOINT: {{s3_endpoint}}
+      AWS_ACCESS_KEY_ID: {{s3_access_key}}
+      AWS_SECRET_ACCESS_KEY: {{s3_secret_key}}
+      AWS_REGION: us-east-1
+      INPUT_BUCKET: {{s3_windows_updates_bucket}}
+      OUTPUT_BUCKET: {{s3_stemcell_pre_release_candidate_bucket}}
+      PRODUCT_KEY:  D2N9P-3P6X9-2R39C-7RTCD-MDVJX
+      OWNER: {{owner}}
+      ORGANIZATION: {{organization}}
+      OS_VERSION: windows2012R2
+      NUM_VCPUS: {{num_vcpus}}
+  - put: stemcells-pre-release-candidate-version
+    params: {bump: minor}
+
+    
+- name: test-vsphere-stemcell
+  serial: true
+  plan:
+  - aggregate:
+    - get: ci
+    - get: stemcell-builder    
+    - get: bosh-windows-stemcell
+      resource: vsphere-stemcell-pre-release-candidate
+    - get: stemcells-pre-release-candidate-version
+      passed: [create-vsphere-stemcell]
+      trigger: true
+  - task: test-stemcell
+    file: ci/bosh-windows-stemcell-builder/bwats/task.yml
+    params:
+      VM_TYPE: {{VM_TYPE}}
+      BOSH_CLIENT_SECRET: {{BOSH_CLIENT_SECRET}}
+      BOSH_CLIENT: {{BOSH_CLIENT}}
+      BOSH_TARGET: {{BOSH_TARGET}}
+      BOSH_UUID: {{BOSH_UUID}}
+      BOSH_IP: {{BOSH_IP}}
+      IAAS: vsphere
+      BOSH_CA_CERT: {{BOSH_CA_CERT}}
+      STEMCELL_PATH: bosh-windows-stemcell/bosh-stemcell-*-vsphere-esxi-windows2012R2-go_agent.tgz
+  - put: vsphere-stemcell-release-candidate
+    params:
+      file: bosh-windows-stemcell/bosh-stemcell-*-vsphere-esxi-windows2012R2-go_agent.tgz
