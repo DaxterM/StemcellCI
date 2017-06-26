@@ -122,6 +122,7 @@ jobs:
     - get: stemcell-builder    
     - get: bosh-windows-stemcell
       resource: vsphere-stemcell-pre-release-candidate
+      trigger: true
     - get: stemcells-pre-release-candidate-version
       passed: [create-vsphere-stemcell]
       trigger: true
