@@ -13,15 +13,16 @@ The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET
 4. S3 compatible storage. Bosh deployed minio works see https://github.com/minio/minio-boshrelease and https://github.com/DaxterM/StemcellCI/blob/master/Examples/minio.yml
 
 # High level steps
-1. Deploy Vsphere bosh director with cloud-config
-2. Bosh Deploy concourse 
-3. Bosh deploy minio and create buckets
-4. Manualy build Concourse Windows worker VM
-5. Manualy build initial VM template and place in S3 Bucket
-6. Create creds.yml file
-7. set pipeline with creds.yml and run it 
+1. Deploy Vsphere bosh director 
+2. Setup director cloud config
+3. Bosh Deploy concourse 
+4. Bosh deploy minio and create buckets
+5. Manualy build Concourse Windows worker VM
+6. Manualy build initial VM template and place in S3 Bucket
+7. Create creds.yml file
+8. set pipeline with creds.yml and run it 
 
-# Deploy Vsphere bosh director with cloud-config
+# Deploy Vsphere bosh director 
 
 ```
 $ git clone https://github.com/cloudfoundry/bosh-deployment ~/workspace/bosh-deployment
