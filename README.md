@@ -25,6 +25,15 @@ The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET
 # Deploy Vsphere bosh director 
 
 ```
+# Install Bosh2 CLI
+# Bosh2 CLI URL for Darwin, Linux, Windows @ https://bosh.io/docs/cli-v2.html#install
+$ wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.28-linux-amd64
+$ chmod +x bosh-cli-*
+$ sudo mv ~/Downloads/bosh-cli-* /usr/local/bin/bosh
+
+#Install Bosh2CLI create-env dependencies
+$ sudo apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3
+
 $ git clone https://github.com/cloudfoundry/bosh-deployment ~/workspace/bosh-deployment
 
 # Create a directory to keep Director deployment
