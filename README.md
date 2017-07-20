@@ -81,7 +81,7 @@ $ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
 
 $ git clone https://github.com/DaxterM/StemcellCI/ ~/workspace/stemcellci
 
-bosh -e bosh-1 update-cloud-config ~/workspace/stemcellci/examples/cloud-config.yml 
+$ bosh -e bosh-1 update-cloud-config ~/workspace/stemcellci/examples/cloud-config.yml 
 -v network_name= 
 -v internal_cidr=
 -v internal_gw=
