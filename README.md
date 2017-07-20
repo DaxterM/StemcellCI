@@ -14,7 +14,7 @@ The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET
 
 # High level steps
 1. Deploy Vsphere bosh director 
-2. Setup director cloud config
+2. Configure cloud configuration
 3. Bosh Deploy concourse 
 4. Bosh deploy minio and create buckets
 5. Manualy build Concourse Windows worker VM
@@ -54,24 +54,44 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   -o ~/workspace/bosh-deployment/vsphere/cpi.yml  \
   --vars-store ./creds.yml \
   -v director_name=bosh 
-  -v internal_cidr=10.193.55.0/24 
-  -v internal_gw=10.193.55.1 
-  -v internal_ip=10.193.55.104 
-  -v vcenter_cluster=Cluster 
-  -v network_name="VM Network" 
-  -v vcenter_ip=.pivotal.io 
-  -v vcenter_user=administrator@vsphere.local 
+  -v internal_cidr=
+  -v internal_gw= 
+  -v internal_ip= 
+  -v vcenter_cluster= 
+  -v network_name= 
+  -v vcenter_ip= 
+  -v vcenter_user= 
   -v vcenter_password= 
-  -v vcenter_dc=Datacenter 
-  -v vcenter_vms=bosh_vms 
-  -v vcenter_templates=bosh_templates 
-  -v vcenter_ds=LUN01 
-  -v vcenter_disks=bosh_disks
+  -v vcenter_dc= 
+  -v vcenter_vms= 
+  -v vcenter_templates= 
+  -v vcenter_ds=
+  -v vcenter_disks=
   
 # Alias deployed Director
-$ bosh -e 10.193.55.104  --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env bosh-1
+$ bosh -e bosh.dir.ip.here  --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env bosh-1
 
 # Log in to the Director
 $ export BOSH_CLIENT=admin
 $ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
  ```
+# Configure cloud configuration
+
+```
+
+$ git clone https://github.com/DaxterM/StemcellCI/ ~/workspace/stemcellci
+
+bosh -e bosh-1 update-cloud-config ~/workspace/stemcellci/examples/cloud-config.yml 
+-v network_name= 
+-v internal_cidr=
+-v internal_gw=
+-v vcenter_cluster=
+-v dns_ip=
+-v concourse_ip=
+-v minio_ip=
+
+```
+# Bosh  deploy  Concourse
+```
+$ 
+```
