@@ -1,43 +1,40 @@
 ---
 name: minio
-director_uuid: ReplaceMe
+director_uuid: ((director_uuid))
 
 releases:
 - name: minio
   version: latest
-  
+
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
   version: latest
-  
-  
+
+
 instance_groups:
 - name: minio
   instances: 1
- 
+
   vm_type: large
   stemcell: trusty
   azs: [z1]
-  networks: 
+  networks:
    - name: default
-     static_ips: [10.193.55.120]
+     static_ips: [((minio_ip))]
   persistent_disk_type: xlarge
   stemcell: trusty
   azs: [z1]
-  networks: 
-   - name: default
-     static_ips: [10.193.55.120]
   jobs:
   - name: minio-server
     release: minio
     properties:
       credential:
        accesskey: minio
-       secretkey: miniopassword
+       secretkey: ((minio_password))
     region: us-east-1
     port: 9001
-  
+
 update:
   canaries: 1
   max_in_flight: 1
