@@ -101,6 +101,7 @@ $ ssh-keygen -f workerkey -t rsa  -N ''
 
 # Upload Releases and Stemcells
 $ bosh -e bosh-1 upload-release https://bosh.io/d/github.com/concourse/concourse
+$ bosh -e bosh-1 upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/garden-runc-release
 $ bosh -e bosh-1 upload-stemcell https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent
 
 
