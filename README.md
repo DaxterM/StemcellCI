@@ -132,8 +132,8 @@ $ bosh -e bosh-1 -d minio deploy ~/workspace/stemcellci/Examples/minio.yml \
 # Create S3 Buckets
 
 Create the following buckets In minio or other S3 compatible store
-vmx-with-windows-update	
-bosh-windows-stemcells-pre-release-candidate
-bosh-windows-stemcells-release-candidate
+* vmx-with-windows-update	
+* bosh-windows-stemcells-pre-release-candidate
+* bosh-windows-stemcells-release-candidate
 
 If you using minio you can create them via the UI. Access minio via http://minio-ip:9000
