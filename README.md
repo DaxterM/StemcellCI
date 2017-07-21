@@ -96,6 +96,7 @@ $ bosh -e bosh-1 update-cloud-config ~/workspace/stemcellci/Examples/cloud-confi
 # Bosh  deploy  Concourse
 ```
 # Generate Keys
+$ cd ~/deployments/bosh-1
 $ ssh-keygen -f tsakey -t rsa  -N ''
 $ ssh-keygen -f workerkey -t rsa  -N '' 
 
@@ -103,6 +104,28 @@ $ ssh-keygen -f workerkey -t rsa  -N ''
 $ bosh -e bosh-1 upload-release https://bosh.io/d/github.com/concourse/concourse
 $ bosh -e bosh-1 upload-release https://bosh.io/d/github.com/cloudfoundry-incubator/garden-runc-release
 $ bosh -e bosh-1 upload-stemcell https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent
+$ bosh -e bosh-1 -d concourse deploy ~/workspace/stemcellci/Examples/concourse.yml \
+	-v director_uuid= \
+	-v concourse_ip= \
+	-v concourse_url= \
+	-v concourse_admin_password= \
+	--var-file=host_public_key=~/deployments/bosh-1/tsakey.pub \
+	--var-file=authorized_keys=~/deployments/bosh-1/workerkey.pub \
+	--var-file=host_key=~/deployments/bosh-1/tsakey
 
+```
+# Bosh deploy Minio (Optional) ignore if you are using AWS or other S3 provider 
 
+```
+# Clone, Build, and upload release to director
+$ git clone https://github.com/minio/minio-boshrelease ~/workspace/minio
+$ cd ~/workspace/minio/
+$ bosh create-release --name minio --force
+$ bosh -e bosh-1 upload-release
+
+# Deploy Minio in a single node config
+$ bosh -e bosh-1 -d minio deploy ~/workspace/stemcellci/Examples/minio.yml \
+	-v director_uuid= \
+	-v minio_ip= \
+	-v minio_password=
 ```
