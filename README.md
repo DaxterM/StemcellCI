@@ -13,6 +13,9 @@ The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET
 4. S3 compatible storage. Bosh deployed minio works see https://github.com/minio/minio-boshrelease and https://github.com/DaxterM/StemcellCI/blob/master/Examples/minio.yml
 
 # High level steps
+
+All of these commands where executed from a ubunu linux jumphost that is on the same network as vsphere, the director and the deployments. Instructions for creating this jumphost are not in this guide.
+
 1. Deploy Vsphere bosh director 
 2. Configure cloud configuration
 3. Bosh Deploy concourse 
@@ -26,7 +29,6 @@ The pipeline will run all windows updates, install diego cell pre-reqs (HWC,.NET
 
 ```
 # Install Bosh2 CLI
-# Bosh2 CLI URL for Darwin, Linux, Windows @ https://bosh.io/docs/cli-v2.html#install
 $ wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.28-linux-amd64
 $ chmod +x bosh-cli-*
 $ sudo mv ~/Downloads/bosh-cli-* /usr/local/bin/bosh
@@ -93,5 +95,13 @@ $ bosh -e bosh-1 update-cloud-config ~/workspace/stemcellci/examples/cloud-confi
 ```
 # Bosh  deploy  Concourse
 ```
-$ 
+# Generate Keys
+$ ssh-keygen -f tsakey -t rsa  -N ''
+$ ssh-keygen -f workerkey -t rsa  -N '' 
+
+# Upload Releases and Stemcells
+$ bosh -e bosh-1 upload-release https://bosh.io/d/github.com/concourse/concourse
+$ bosh -e bosh-1 upload-stemcell https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent
+
+
 ```
